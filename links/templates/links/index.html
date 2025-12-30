@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biolink - Welcome</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-black min-h-screen flex flex-col items-center justify-center antialiased">
+
+    <div class="text-center space-y-8 px-4">
+        
+        <!-- Main Text -->
+        <div class="space-y-4">
+            <h1 class="text-5xl md:text-6xl font-bold tracking-tighter">
+                Welcome to Biolink
+            </h1>
+            <p class="text-gray-500 text-lg md:text-xl font-normal">
+                The simple way to share your links.
+            </p>
+        </div>
+
+        <!-- Get Started Button with Icon -->
+        <a href="/signup/" class="group inline-flex items-center gap-3 bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 hover:scale-105 transition-all duration-300 shadow-lg">
+            Get Started
+            <!-- Arrow Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 transition-transform group-hover:translate-x-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+        </a>
+
+        <!-- Footer -->
+        <div class="fixed bottom-6 text-gray-400 text-xs font-medium tracking-widest uppercase">
+            Built with Django
+        </div>
+
+    </div>
+
+</body>
+</html>
