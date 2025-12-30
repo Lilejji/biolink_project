@@ -1,0 +1,126 @@
+{% extends "links/base.html" %}
+
+{% block content %}
+<div class="w-full max-w-md text-center space-y-8">
+    
+    <!-- Dashboard Header -->
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p class="text-gray-500 text-sm">Manage your profile & links</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 mt-4">
+            <a href="{% url 'edit_profile' %}" class="text-xs font-bold uppercase tracking-widest border-b-2 border-black pb-1 hover:opacity-60">Edit Profile / Theme</a>
+            
+            <button onclick="copyBioLink()" id="copyBtn" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-black hover:bg-gray-100 px-2 py-1 rounded transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5" />
+                </svg>
+                Copy Link
+            </button>
+        </div>
+    </div>
+
+    <!-- Add New Link Form -->
+    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-left">
+        <h3 class="text-xs font-bold uppercase text-gray-400 mb-3">Add New Link</h3>
+        <form action="{% url 'add_link' %}" method="post" class="space-y-3">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Title (e.g., 'Instagram')" class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black outline-none" required>
+            <input type="url" name="url" placeholder="https://instagram.com/me" class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black outline-none" required>
+            <button type="submit" class="w-full bg-black text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">Add Link</button>
+        </form>
+    </div>
+
+    <!-- List Existing Links -->
+    <div class="space-y-3 text-left">
+        <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold uppercase text-gray-400">Your Links</h3>
+            <span class="text-[10px] text-gray-300 uppercase">Drag to reorder</span>
+        </div>
+        
+        <!-- Added ID="link-list" for SortableJS -->
+        <div id="link-list" class="space-y-3">
+            {% for link in links %}
+                <!-- Added 'data-id' so JS knows which ID is being moved -->
+                <div class="group relative flex items-center justify-between bg-white border border-gray-200 p-3 rounded-lg shadow-sm hover:border-black transition cursor-move" data-id="{{ link.id }}">
+                    
+                    <!-- Drag Handle Icon -->
+                    <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-black mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path fill-rule="evenodd" d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+
+                    <div class="flex-1 cursor-pointer">
+                        <p class="font-semibold text-sm">{{ link.title }}</p>
+                        <p class="text-xs text-gray-400 truncate w-32">{{ link.url }}</p>
+                    </div>
+                    
+                    <a href="{% url 'delete_link' link.id %}" class="text-red-400 text-xs hover:text-red-600 font-medium uppercase z-10 bg-white px-1">Delete</a>
+                </div>
+            {% empty %}
+                <p class="text-sm text-gray-400 italic">No links yet. Add one above!</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Preview Button -->
+    <a href="{% url 'profile' profile.slug %}" target="_blank" class="block w-full border-2 border-black py-3 rounded-lg font-bold hover:bg-black hover:text-white transition">Preview Public Page</a>
+
+</div>
+
+<!-- Load SortableJS Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+<script>
+// 1. Copy Link Logic
+function copyBioLink() {
+    const link = window.location.origin + "/{{ profile.slug }}/";
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.innerHTML = "Copied!";
+        setTimeout(() => {
+            btn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5" />
+                </svg> Copy Link`;
+        }, 2000);
+    });
+}
+
+// 2. Drag and Drop Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const el = document.getElementById('link-list');
+    
+    if (el) {
+        const sortable = new Sortable(el, {
+            handle: '.drag-handle', // Only allow dragging via the 3-bar icon
+            animation: 150, // Smooth animation when moving
+            onEnd: function (evt) {
+                // Collect the new order of IDs
+                const itemIds = Array.from(el.children).map(item => item.dataset.id);
+                
+                // Send the new order to the backend
+                const formData = new FormData();
+                itemIds.forEach(id => formData.append('ids[]', id));
+                
+                // Get CSRF Token
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                fetch("{% url 'reorder_links' %}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                }).then(response => response.json())
+                  .then(data => {
+                      if(data.status !== 'success') console.error('Failed to reorder');
+                  });
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "links/base.html" %}
+
+{% block content %}
+<!-- 
+   Dynamic Wrapper:
+   If theme is 'dark', we use zinc-950 (soft black) and white text.
+   Else, we use white background and dark text.
+-->
+<div class="min-h-screen w-full flex flex-col items-center justify-center p-4 animate-fade-in-up
+    {% if profile.theme == 'dark' %}bg-zinc-950 text-white{% else %}bg-white text-brand-black{% endif %}">
+
+    <div class="w-full max-w-md flex flex-col items-center text-center space-y-8">
+        
+        <!-- Profile Header -->
+        <div class="space-y-3 flex flex-col items-center">
+            
+            <!-- Avatar Logic -->
+            <div class="relative group mx-auto">
+                {% if profile.avatar %}
+                    <!-- In dark mode, we add a border color -->
+                    <img src="{{ profile.avatar.url }}" 
+                         alt="{{ profile.user.username }}" 
+                         class="w-24 h-24 rounded-full object-cover border-2 {% if profile.theme == 'dark' %}border-zinc-800{% else %}border-gray-100{% endif %} shadow-sm">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ profile.user.username }}&background=random&size=128" 
+                         alt="{{ profile.user.username }}" 
+                         class="w-24 h-24 rounded-full border-2 {% if profile.theme == 'dark' %}border-zinc-800{% else %}border-gray-100{% endif %} shadow-sm">
+                {% endif %}
+            </div>
+
+            <!-- Name and Bio -->
+            <div class="flex items-center justify-center gap-2">
+                <h1 class="text-2xl font-bold tracking-tight">
+                    @{{ profile.slug }}
+                </h1>
+                {% if profile.is_verified %}
+                <!-- Verified Badge Icon (Blue Checkmark) -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3B82F6" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                </svg>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Links Container -->
+        <div class="w-full space-y-4">
+            {% for link in profile.links.all %}
+            <!-- 
+               Button Logic:
+               Dark Mode = Dark Gray Button, White Text.
+               Light Mode = Light Gray Button, Dark Text.
+            -->
+            <a href="{{ link.url }}" 
+               target="_blank"
+               rel="noopener noreferrer"
+               class="block w-full rounded-xl py-4 px-6 text-center font-semibold transition-all duration-300 ease-out transform hover:-translate-y-1 hover:shadow-lg
+               {% if profile.theme == 'dark' %}
+                   bg-zinc-900 text-white border border-zinc-800 hover:bg-zinc-800
+               {% else %}
+                   bg-brand-gray text-gray-800 border border-transparent hover:bg-white hover:border-gray-200
+               {% endif %}">
+                {{ link.title }}
+            </a>
+            {% empty %}
+            <p class="{% if profile.theme == 'dark' %}text-zinc-600{% else %}text-gray-400{% endif %} text-sm italic">No links added yet.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 opacity-40 hover:opacity-100 transition-opacity duration-500">
+            <p class="text-xs font-medium tracking-widest uppercase">BioLink</p>
+        </footer>
+
+    </div>
+</div>
+{% endblock %}

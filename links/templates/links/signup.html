@@ -1,0 +1,44 @@
+{% extends "links/base.html" %}
+
+{% block content %}
+<div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold tracking-tight">Join Us</h1>
+        <p class="text-gray-500 mt-2">Create your bio link page.</p>
+    </div>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-sm font-medium mb-1">Username</label>
+            <input type="text" name="username" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none transition" required>
+        </div>
+        <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input type="password" name="password1" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none transition" required>
+        </div>
+        <div>
+            <label class="block text-sm font-medium mb-1">Confirm Password</label>
+            <input type="password" name="password2" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none transition" required>
+        </div>
+        
+        {% if form.errors %}
+            <div class="text-red-500 text-sm text-center">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
+            Create Account
+        </button>
+    </form>
+    
+    <p class="text-center text-sm mt-6 text-gray-500">
+        Already have an account? <a href="{% url 'login' %}" class="text-black font-bold hover:underline">Sign in</a>
+    </p>
+</div>
+{% endblock %}

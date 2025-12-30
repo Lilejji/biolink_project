@@ -1,0 +1,55 @@
+{% extends "links/base.html" %}
+
+{% block content %}
+<div class="w-full max-w-md">
+    
+    <div class="mb-8 text-center">
+        <h1 class="text-2xl font-bold tracking-tight">Edit Profile</h1>
+        <p class="text-gray-500 text-sm">Update your appearance and settings</p>
+    </div>
+
+    <!-- enctype="multipart/form-data" is REQUIRED for uploading images -->
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+        
+        <!-- Slug Field -->
+        <div>
+            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Your URL Slug</label>
+            <div class="flex items-center">
+                <span class="bg-gray-100 text-gray-500 p-3 rounded-l-lg border border-r-0 border-gray-200 text-sm font-mono">biolink.com/</span>
+                <input type="text" name="slug" value="{{ form.slug.value|default:'' }}" class="flex-1 p-3 border border-gray-200 rounded-r-lg focus:ring-2 focus:ring-black outline-none" required>
+            </div>
+        </div>
+
+        <!-- Bio Field -->
+        <div>
+            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Bio</label>
+            <textarea name="bio" rows="3" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none">{{ form.bio.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Avatar Field -->
+        <div>
+            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Profile Picture</label>
+            <input type="file" name="avatar" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800 transition">
+            {% if form.avatar.value %}
+                <p class="text-xs text-gray-400 mt-2">Current: {{ form.avatar.value }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Theme Field -->
+        <div>
+            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Theme</label>
+            <select name="theme" class="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none bg-white">
+                <option value="light" {% if form.theme.value == 'light' %}selected{% endif %}>Light Mode (Default)</option>
+                <option value="dark" {% if form.theme.value == 'dark' %}selected{% endif %}>Dark Mode (Night)</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" class="flex-1 bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition">Save Changes</button>
+            <a href="{% url 'dashboard' %}" class="flex-1 border-2 border-black py-3 rounded-lg font-bold text-center hover:bg-gray-100 transition">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

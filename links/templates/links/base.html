@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bio Link{% endblock %}</title>
+    
+    <!-- Typography: Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styling: Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-black': '#1a1a1a',
+                        'brand-gray': '#f5f5f5',
+                    },
+                    // --- ADD THIS SECTION FOR ANIMATION ---
+                    keyframes: {
+                        'fade-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                    },
+                    animation: {
+                        'fade-in-up': 'fade-in-up 0.8s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Smooth scrolling for the whole page */
+        html { scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; }
+    </style>
+</head>
+<!-- REMOVED bg-white and text-brand-black from body class -->
+<body class="antialiased">
+
+    <!-- REMOVED p-4 (padding) from the wrapper div so colors go edge-to-edge -->
+    <div class="min-h-screen flex flex-col items-center justify-center w-full">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>
